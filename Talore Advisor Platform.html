@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Talore HR — Postgraduate Pathway Advisor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#130E29; --bg2:#1C1442; --panel:rgba(255,255,255,.045); --panel-2:rgba(255,255,255,.07);
+  --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.18);
+  --text:#ECE9F7; --muted:#A39FC0; --dim:#7E799C;
+  --gold:#F2B450; --gold-2:#E3982A; --teal:#27C2A6; --violet:#8C6CFF; --danger:#FF7A7A;
+  --r:20px; --r-sm:13px; --shadow:0 24px 60px -20px rgba(0,0,0,.6);
+  --disp:'Space Grotesk',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif; --mono:'Space Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--body); color:var(--text); background:var(--bg);
+  -webkit-font-smoothing:antialiased; line-height:1.5; overflow-x:hidden;
+}
+.bg-orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
+.orb.a{width:46vw;height:46vw;background:radial-gradient(circle,#6B43FF,transparent 65%);top:-12vw;left:-8vw;animation:drift 22s ease-in-out infinite}
+.orb.b{width:40vw;height:40vw;background:radial-gradient(circle,#13937E,transparent 65%);bottom:-14vw;right:-8vw;animation:drift 26s ease-in-out infinite reverse}
+.orb.c{width:30vw;height:30vw;background:radial-gradient(circle,#E3982A,transparent 60%);top:40%;right:18%;opacity:.28;animation:drift 30s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(4vw,3vw) scale(1.08)}}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 22px}
+h1,h2,h3{font-family:var(--disp);font-weight:600;letter-spacing:-.02em;margin:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.muted{color:var(--muted)} .dim{color:var(--dim)}
+button{font-family:var(--body);cursor:pointer;border:none;background:none;color:inherit}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:14px 26px;border-radius:999px;font-weight:600;font-size:15px;transition:transform .18s,box-shadow .18s,opacity .18s}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#241704;box-shadow:0 10px 30px -8px rgba(242,180,80,.5)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 38px -8px rgba(242,180,80,.6)}
+.btn-ghost{background:var(--panel);border:1px solid var(--line);color:var(--text)}
+.btn-ghost:hover{background:var(--panel-2);border-color:var(--line-2)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);backdrop-filter:blur(14px)}
+
+/* view switching */
+.view{display:none;animation:viewIn .5s cubic-bezier(.2,.7,.2,1)}
+.view.active{display:block}
+@keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* WELCOME */
+#welcome{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px 0 60px}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(34px,5.4vw,62px);line-height:1.02;margin:18px 0 0}
+.hero h1 .grad{background:linear-gradient(110deg,var(--gold),#FFD98A 45%,var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lede{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:34ch;margin:22px 0 30px}
+.hero .cta-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.time-pill{font-family:var(--mono);font-size:12.5px;color:var(--muted);display:inline-flex;gap:8px;align-items:center;padding:9px 14px;border:1px solid var(--line);border-radius:999px}
+.steps-mini{margin-top:46px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:640px}
+.step-mini{padding:18px;border-radius:var(--r-sm);background:var(--panel);border:1px solid var(--line)}
+.step-mini .n{font-family:var(--mono);color:var(--gold);font-size:13px}
+.step-mini h3{font-size:15px;margin:8px 0 5px} .step-mini p{font-size:13px;color:var(--muted);margin:0}
+.hero-visual{position:relative;height:360px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:-.01em}
+.brand .dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--gold),var(--teal));display:grid;place-items:center;color:#1a1030;font-size:15px}
+.topbar{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.link-btn{font-size:13.5px;color:var(--muted)} .link-btn:hover{color:var(--text)}
+
+/* ASSESSMENT */
+#assessment{padding:24px 0 80px;min-height:100vh}
+.progress-head{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,rgba(19,14,41,.96),rgba(19,14,41,.6));backdrop-filter:blur(8px);padding:14px 0 16px;margin-bottom:8px}
+.pbar{height:7px;background:var(--panel);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--teal));transition:width .5s cubic-bezier(.2,.7,.2,1)}
+.pmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:9px}
+.step{max-width:760px;margin:26px auto 0}
+.step-head .eyebrow{display:block;margin-bottom:10px}
+.step-head h2{font-size:clamp(24px,3.5vw,33px)}
+.step-head p{color:var(--muted);margin:9px 0 0}
+.fields{margin-top:30px;display:flex;flex-direction:column;gap:24px}
+.field label.flabel{display:block;font-weight:600;font-size:15px;margin-bottom:10px}
+.field .hint{font-size:13px;color:var(--dim);margin-top:7px}
+.field .err{font-size:13px;color:var(--danger);margin-top:7px;display:none}
+.field.invalid .err{display:block}
+input.txt{width:100%;padding:14px 16px;border-radius:var(--r-sm);background:var(--panel);border:1px solid var(--line);color:var(--text);font-size:15px;font-family:var(--body);transition:border-color .18s,background .18s}
+input.txt::placeholder{color:var(--dim)}
+input.txt:focus{outline:none;border-color:var(--violet);background:var(--panel-2)}
+.field.invalid input.txt{border-color:var(--danger)}
+.opts{display:flex;flex-wrap:wrap;gap:11px}
+.opt{padding:13px 18px;border-radius:var(--r-sm);background:var(--panel);border:1px solid var(--line);font-size:14.5px;transition:all .16s;position:relative}
+.opt:hover{border-color:var(--line-2);background:var(--panel-2)}
+.opt.sel{border-color:var(--gold);background:linear-gradient(135deg,rgba(242,180,80,.16),rgba(39,194,166,.08));color:#fff}
+.opt.sel::after{content:'';position:absolute;inset:0;border-radius:var(--r-sm);box-shadow:0 0 0 1px var(--gold) inset}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{padding:11px 16px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:14px;transition:all .16s}
+.chip:hover{border-color:var(--line-2)}
+.chip.sel{background:linear-gradient(135deg,var(--violet),#6E4BFF);border-color:transparent;color:#fff;box-shadow:0 8px 22px -8px rgba(140,108,255,.6)}
+.toggle-row{display:flex;gap:10px}
+.toggle{flex:1;text-align:center;padding:15px;border-radius:var(--r-sm);background:var(--panel);border:1px solid var(--line);font-weight:600;transition:all .16s}
+.toggle.sel{border-color:var(--teal);background:rgba(39,194,166,.14);color:#fff}
+.uni-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.uni-card{padding:18px;border-radius:var(--r-sm);background:var(--panel);border:1px solid var(--line);text-align:left;transition:all .16s}
+.uni-card:hover{border-color:var(--line-2)}
+.uni-card.sel{border-color:var(--gold);background:linear-gradient(135deg,rgba(242,180,80,.14),transparent)}
+.uni-card .mono{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-family:var(--disp);font-weight:700;margin-bottom:11px;color:#1a1030}
+.uni-card h3{font-size:14.5px} .uni-card p{font-size:12.5px;color:var(--muted);margin:4px 0 0}
+.slider-row{display:grid;grid-template-columns:1fr;gap:18px}
+.slider-item{display:grid;grid-template-columns:160px 1fr 84px;gap:14px;align-items:center}
+.slider-item .sname{font-size:14.5px;font-weight:500}
+.slider-item input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:999px;background:linear-gradient(90deg,var(--gold) var(--p,40%),var(--panel) var(--p,40%));outline:none}
+.slider-item input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--gold);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.slider-item input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--gold);cursor:pointer}
+.slider-item .sval{font-family:var(--mono);font-size:13px;color:var(--muted);text-align:right}
+/* searchable select */
+.ssel{position:relative}
+.ssel .ssel-list{position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:260px;overflow:auto;background:#211845;border:1px solid var(--line-2);border-radius:var(--r-sm);z-index:20;display:none;box-shadow:var(--shadow)}
+.ssel.open .ssel-list{display:block}
+.ssel-list .it{padding:11px 16px;font-size:14.5px;cursor:pointer}
+.ssel-list .it:hover,.ssel-list .it.hl{background:var(--panel-2)}
+.ssel-list .empty{padding:14px 16px;color:var(--dim);font-size:14px}
+.nav-row{display:flex;justify-content:space-between;margin-top:38px;gap:12px}
+.saved-tag{font-family:var(--mono);font-size:11.5px;color:var(--teal);opacity:0;transition:opacity .3s}
+.saved-tag.show{opacity:1}
+
+/* RESULTS */
+#results{padding:30px 0 90px}
+.res-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+.res-head h2{font-size:clamp(26px,4vw,40px)}
+.hero-match{display:grid;grid-template-columns:230px 1fr;gap:30px;align-items:center;padding:30px;margin-bottom:22px}
+.gauge{position:relative;width:200px;height:200px;margin:0 auto}
+.gauge svg{transform:rotate(-90deg)}
+.gauge .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .val b{font-family:var(--disp);font-size:46px;line-height:1}
+.gauge .val span{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;margin-top:4px}
+.hm-info .tag{display:inline-flex;gap:7px;align-items:center;font-family:var(--mono);font-size:11.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:var(--teal);margin-bottom:12px}
+.hm-info h3{font-size:clamp(20px,3vw,28px)}
+.hm-info .uni{color:var(--gold);font-weight:600;margin-top:5px}
+.hm-info p.why{color:var(--muted);margin:14px 0 0;font-size:15px}
+.badges{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.badge{font-size:12.5px;padding:7px 13px;border-radius:999px;background:var(--panel);border:1px solid var(--line)}
+.badge.ok{color:var(--teal);border-color:rgba(39,194,166,.4)}
+.grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start}
+.sec-title{font-family:var(--disp);font-size:19px;margin:30px 0 16px;display:flex;align-items:center;gap:10px}
+.sec-title .bar{width:26px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--teal))}
+.rec{padding:20px;margin-bottom:14px;transition:transform .2s,border-color .2s}
+.rec:hover{transform:translateX(3px);border-color:var(--line-2)}
+.rec-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.rec h3{font-size:17px} .rec .runi{color:var(--gold);font-size:13.5px;margin-top:3px}
+.rec .rpct{font-family:var(--disp);font-size:26px;color:var(--gold)}
+.rec .rpct small{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.mini-bars{display:flex;gap:6px;margin-top:13px}
+.mini-bars .mb{flex:1;height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}
+.mini-bars .mb i{display:block;height:100%;width:0;background:var(--teal);transition:width .8s ease}
+.rec .why{font-size:13.5px;color:var(--muted);margin-top:13px}
+.rec .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.rec .meta span{font-size:11.5px;color:var(--dim);font-family:var(--mono);padding:5px 10px;border-radius:8px;background:var(--panel-2)}
+.bars-chart .bc-row{display:grid;grid-template-columns:1fr 56px;gap:12px;align-items:center;margin-bottom:13px}
+.bars-chart .bc-name{font-size:13px} .bars-chart .bc-name b{display:block;font-weight:600}
+.bars-chart .bc-name em{font-style:normal;color:var(--dim);font-size:11.5px}
+.bars-chart .bc-track{grid-column:1/3;height:9px;border-radius:5px;background:var(--panel-2);overflow:hidden;margin-top:-6px}
+.bars-chart .bc-track i{display:block;height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,var(--gold),var(--teal));transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.bars-chart .bc-val{font-family:var(--mono);font-size:13px;color:var(--gold);text-align:right}
+.radar-wrap{display:grid;place-items:center}
+.uni-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.uni-tile{padding:18px;text-align:center}
+.uni-tile .mono{width:50px;height:50px;border-radius:13px;margin:0 auto 12px;display:grid;place-items:center;font-family:var(--disp);font-weight:700;font-size:17px;color:#1a1030}
+.uni-tile b{display:block;font-size:14px} .uni-tile .c{font-family:var(--disp);font-size:30px;color:var(--gold);margin-top:8px}
+.uni-tile small{color:var(--muted)}
+.pathways,.skillgaps{display:flex;flex-wrap:wrap;gap:10px}
+.path{padding:11px 16px;border-radius:999px;background:linear-gradient(135deg,rgba(39,194,166,.14),transparent);border:1px solid rgba(39,194,166,.35);font-size:13.5px}
+.gap{padding:11px 16px;border-radius:999px;background:var(--panel);border:1px dashed var(--line-2);font-size:13.5px}
+.gap b{color:var(--gold)}
+/* roadmap */
+.roadmap{padding:30px 24px;overflow:hidden}
+.road-svg{width:100%;height:auto;display:block}
+.road-node text{font-family:var(--body)}
+.alt-list .rec{background:var(--panel)}
+.footnote{margin-top:34px;font-size:12.5px;color:var(--dim);text-align:center;max-width:680px;margin-left:auto;margin-right:auto}
+
+/* ADMIN */
+#admin{padding:26px 0 80px}
+.admin-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.tab{padding:10px 18px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:14px;font-weight:500}
+.tab.active{background:var(--text);color:#1a1030;border-color:transparent}
+.atab{display:none} .atab.active{display:block}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}
+th{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+td .x{color:var(--danger);cursor:pointer;font-weight:700}
+td .e{color:var(--violet);cursor:pointer;margin-right:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}
+.kpi{padding:20px} .kpi .k{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.kpi .v{font-family:var(--disp);font-size:34px;color:var(--gold);margin-top:8px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:8px 0 16px}
+.form-grid .f2{grid-column:1/3}
+.form-grid label{font-size:12.5px;color:var(--muted);display:block;margin-bottom:6px}
+.form-grid input,.form-grid select{width:100%;padding:11px 13px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--text);font-family:var(--body);font-size:14px}
+.tagpick{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.tagpick .tp{padding:7px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:12px;cursor:pointer}
+.tagpick .tp.on{background:var(--violet);border-color:transparent;color:#fff}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.wcell label{font-size:13px;display:block;margin-bottom:8px}
+.wcell input{width:100%}
+.anbar{display:grid;grid-template-columns:200px 1fr 40px;gap:12px;align-items:center;margin-bottom:10px;font-size:13px}
+.anbar .t{height:10px;border-radius:5px;background:var(--panel-2);overflow:hidden}
+.anbar .t i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--teal))}
+.note-inline{font-size:12.5px;color:var(--dim);margin:14px 0}
+.modal-mask{position:fixed;inset:0;background:rgba(8,5,20,.7);backdrop-filter:blur(4px);z-index:50;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-mask.show{display:flex}
+.modal{max-width:420px;width:100%;padding:28px}
+.modal h3{font-size:20px;margin-bottom:8px}
+.modal input{width:100%;padding:13px;border-radius:11px;background:var(--panel);border:1px solid var(--line);color:var(--text);font-size:15px;margin:14px 0}
+
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr} .hero-visual{display:none}
+  .steps-mini{grid-template-columns:1fr} .grid-2{grid-template-columns:1fr}
+  .hero-match{grid-template-columns:1fr;text-align:center} .gauge{margin-bottom:6px}
+  .hm-info .badges{justify-content:center} .hm-info .tag{margin:0 auto 12px}
+  .slider-item{grid-template-columns:1fr;gap:7px} .slider-item .sval{text-align:left}
+  .form-grid{grid-template-columns:1fr} .form-grid .f2{grid-column:1}
+  .anbar{grid-template-columns:120px 1fr 34px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="bg-orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+
+<!-- WELCOME -->
+<section id="welcome" class="view active">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand"><span class="dot">T</span> Talore HR</div>
+      <button class="link-btn" onclick="enterAdmin()">Administrator</button>
+    </div>
+    <div class="hero-grid hero">
+      <div>
+        <span class="eyebrow">Postgraduate Pathway Advisor</span>
+        <h1>Find the Master's that <span class="grad">moves your career forward</span>.</h1>
+        <p class="lede">Answer a few questions and our recommendation engine maps you to the best-fit programmes across Miva, NOUN, and ABU — with match scores, eligibility, and a career roadmap.</p>
+        <div class="cta-row">
+          <button class="btn btn-primary" onclick="startAssessment()">Start assessment →</button>
+          <span class="time-pill">◷ 5–8 minutes</span>
+          <button class="btn btn-ghost" id="resumeBtn" style="display:none" onclick="resumeAssessment()">Resume</button>
+        </div>
+        <div class="steps-mini">
+          <div class="step-mini"><div class="n">01</div><h3>Tell us about you</h3><p>Background, experience, skills, and goals.</p></div>
+          <div class="step-mini"><div class="n">02</div><h3>We analyse the fit</h3><p>A weighted model checks eligibility and alignment.</p></div>
+          <div class="step-mini"><div class="n">03</div><h3>See your roadmap</h3><p>Ranked programmes, universities, and next steps.</p></div>
+        </div>
+      </div>
+      <div class="hero-visual" id="heroVisual"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSESSMENT -->
+<section id="assessment" class="view">
+  <div class="wrap">
+    <div class="progress-head">
+      <div class="topbar" style="padding:6px 0 12px">
+        <div class="brand" style="font-size:15px"><span class="dot" style="width:24px;height:24px;font-size:12px">T</span> Talore HR</div>
+        <span class="saved-tag" id="savedTag">✓ Progress saved</span>
+      </div>
+      <div class="pbar"><i id="pbarFill"></i></div>
+      <div class="pmeta"><span id="pStep">Step 1 of 7</span><span id="pPct">0% complete</span></div>
+    </div>
+    <div id="stepHost"></div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results" class="view"><div class="wrap" id="resultsHost"></div></section>
+
+<!-- ADMIN -->
+<section id="admin" class="view"><div class="wrap" id="adminHost"></div></section>
+
+<!-- admin login modal -->
+<div class="modal-mask" id="loginMask">
+  <div class="card modal">
+    <h3>Administrator access</h3>
+    <p class="muted" style="font-size:14px">Demo passcode: <code>talore2026</code></p>
+    <input type="password" id="adminPass" placeholder="Enter passcode" onkeydown="if(event.key==='Enter')checkAdmin()">
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="closeLogin()">Cancel</button>
+      <button class="btn btn-primary" onclick="checkAdmin()">Enter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SEED_COURSES = [{"id": "MIV-MBA", "uni": "Miva Open University", "name": "MBA (Master of Business Administration)", "minClass": 3, "mode": "Online", "tuition": 3, "rewardsExp": true, "outcomes": "Management & leadership roles, consulting, entrepreneurship", "fields": [1, 1, 1, 1, 1, 1, 1, 1, 1], "interests": [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0], "goals": [1, 1, 1, 0, 0, 1, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 1, 0, 1], "about": "A general management degree suited to professionals seeking leadership roles."}, {"id": "MIV-CYB", "uni": "Miva Open University", "name": "MSc Cybersecurity", "minClass": 3, "mode": "Online", "tuition": 3, "rewardsExp": false, "outcomes": "Security analyst, SOC engineer, security consultant", "fields": [0, 1, 1, 1, 0, 0, 0, 0, 0], "interests": [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [1, 1, 1, 1, 0, 0, 0, 0], "skills": [0, 0, 1, 0, 1, 1, 1, 0, 0], "about": "Technical programme focused on securing systems, networks and data."}, {"id": "MIV-DS", "uni": "Miva Open University", "name": "MSc Data Science", "minClass": 3, "mode": "Online", "tuition": 3, "rewardsExp": false, "outcomes": "Data scientist, ML engineer, analytics lead", "fields": [1, 1, 1, 1, 0, 0, 0, 0, 0], "interests": [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [0, 1, 1, 1, 0, 0, 0, 1], "skills": [0, 0, 1, 0, 1, 1, 1, 0, 0], "about": "Builds statistical, programming and machine-learning skills for data roles."}, {"id": "MIV-IT", "uni": "Miva Open University", "name": "MSc Information Technology", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": false, "outcomes": "IT manager, systems architect, software roles", "fields": [0, 1, 1, 1, 0, 0, 0, 0, 0], "interests": [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], "goals": [1, 1, 1, 1, 0, 0, 0, 0], "skills": [0, 0, 0, 0, 1, 0, 1, 0, 1], "about": "Broad IT master's covering software, systems and emerging tech."}, {"id": "MIV-PH", "uni": "Miva Open University", "name": "MSc Public Health", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": false, "outcomes": "Public health officer, epidemiology, NGO/health policy", "fields": [0, 0, 1, 0, 1, 1, 0, 0, 0], "interests": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], "goals": [0, 0, 1, 1, 1, 0, 0, 1], "skills": [0, 1, 0, 1, 0, 1, 0, 1, 0], "about": "Population health, epidemiology and health systems."}, {"id": "NOU-MBA", "uni": "National Open University of Nigeria (NOUN)", "name": "MBA (Master of Business Administration)", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": true, "outcomes": "Management roles, consulting, business ownership", "fields": [1, 1, 1, 1, 1, 1, 1, 1, 1], "interests": [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0], "goals": [1, 1, 1, 0, 0, 0, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 1, 0, 1], "about": "Affordable distance-learning MBA for working professionals."}, {"id": "NOU-CS", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Computer Science", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": false, "outcomes": "Software, research, IT roles", "fields": [0, 1, 1, 1, 0, 0, 0, 0, 0], "interests": [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [0, 1, 1, 0, 1, 0, 0, 1], "skills": [0, 0, 1, 0, 1, 1, 1, 0, 0], "about": "Computer science fundamentals through distance learning."}, {"id": "NOU-IT", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Information Technology", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": false, "outcomes": "IT management and systems roles", "fields": [0, 1, 1, 1, 0, 0, 0, 0, 0], "interests": [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], "goals": [1, 1, 1, 0, 0, 0, 0, 0], "skills": [0, 0, 0, 0, 1, 0, 1, 0, 1], "about": "Applied IT master's for the workplace."}, {"id": "NOU-MPA", "uni": "National Open University of Nigeria (NOUN)", "name": "Master of Public Administration (MPA)", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": true, "outcomes": "Public sector leadership, policy, governance", "fields": [1, 1, 1, 1, 1, 1, 1, 1, 1], "interests": [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0], "goals": [1, 0, 1, 0, 0, 0, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 1, 1, 0], "about": "Public sector management, policy and governance."}, {"id": "NOU-MPH", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Public Health (MPH)", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": false, "outcomes": "Public health, epidemiology, health NGOs", "fields": [0, 0, 1, 0, 1, 1, 0, 0, 0], "interests": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], "goals": [0, 0, 1, 1, 1, 0, 0, 1], "skills": [0, 1, 0, 1, 0, 1, 0, 1, 0], "about": "Health systems, epidemiology and community health."}, {"id": "NOU-ECO", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Economics", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": false, "outcomes": "Policy analyst, economist, research", "fields": [1, 0, 1, 0, 1, 0, 0, 0, 0], "interests": [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [1, 0, 1, 0, 1, 0, 0, 1], "skills": [0, 0, 1, 1, 0, 1, 0, 1, 0], "about": "Economic theory, policy and quantitative analysis."}, {"id": "NOU-ACC", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Accounting", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": false, "outcomes": "Senior accountant, finance manager, audit", "fields": [1, 0, 0, 0, 0, 0, 0, 0, 0], "interests": [0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [1, 1, 0, 0, 1, 0, 0, 0], "skills": [0, 0, 1, 0, 0, 0, 1, 1, 0], "about": "Advanced financial and management accounting."}, {"id": "NOU-MKT", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Marketing", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": true, "outcomes": "Marketing manager, brand, digital marketing", "fields": [1, 0, 0, 0, 1, 0, 1, 0, 0], "interests": [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], "goals": [1, 1, 1, 0, 0, 1, 0, 0], "skills": [0, 1, 0, 0, 0, 0, 1, 1, 0], "about": "Strategic and digital marketing for managers."}, {"id": "NOU-EDU", "uni": "National Open University of Nigeria (NOUN)", "name": "Master of Education (M.Ed)", "minClass": 3, "mode": "Online", "tuition": 1, "rewardsExp": true, "outcomes": "School leadership, curriculum, lecturing", "fields": [0, 0, 1, 0, 1, 0, 1, 0, 0], "interests": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0], "goals": [1, 0, 1, 0, 1, 0, 0, 0], "skills": [1, 1, 0, 1, 0, 0, 0, 1, 0], "about": "Educational theory, leadership and pedagogy."}, {"id": "NOU-HRM", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Human Resource Management", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": true, "outcomes": "HR manager, people operations, L&D", "fields": [1, 0, 0, 0, 1, 0, 0, 0, 0], "interests": [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], "goals": [1, 1, 1, 0, 0, 0, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 1, 1, 0], "about": "Strategic HR, talent and organisational behaviour."}, {"id": "NOU-PM", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Project Management", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": true, "outcomes": "Project/programme manager, PMO roles", "fields": [1, 1, 1, 1, 1, 1, 1, 1, 1], "interests": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0], "goals": [1, 1, 1, 0, 0, 0, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 1, 0, 1], "about": "Planning, execution and delivery of projects."}, {"id": "NOU-AGR", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Agricultural Extension & Rural Development", "minClass": 3, "mode": "Online", "tuition": 1, "rewardsExp": false, "outcomes": "Agric extension, agribusiness, NGOs", "fields": [0, 0, 1, 0, 1, 0, 0, 0, 0], "interests": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], "goals": [0, 0, 1, 0, 1, 1, 0, 1], "skills": [0, 1, 0, 1, 0, 0, 0, 1, 0], "about": "Agriculture, rural development and extension services."}, {"id": "ABU-MBA", "uni": "Ahmadu Bello University (ABU)", "name": "MBA (Master of Business Administration)", "minClass": 3, "mode": "Hybrid", "tuition": 2, "rewardsExp": true, "outcomes": "Management and leadership positions", "fields": [1, 1, 1, 1, 1, 1, 1, 1, 1], "interests": [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0], "goals": [1, 1, 1, 0, 0, 0, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 1, 0, 1], "about": "Conventional MBA with strong alumni network."}, {"id": "ABU-CS", "uni": "Ahmadu Bello University (ABU)", "name": "MSc Computer Science", "minClass": 2, "mode": "Physical", "tuition": 2, "rewardsExp": false, "outcomes": "Research, academia, software roles", "fields": [0, 1, 1, 1, 0, 0, 0, 0, 0], "interests": [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [0, 1, 1, 0, 1, 0, 0, 1], "skills": [0, 0, 1, 0, 1, 1, 1, 0, 0], "about": "Research-oriented computer science."}, {"id": "ABU-STA", "uni": "Ahmadu Bello University (ABU)", "name": "MSc Statistics", "minClass": 2, "mode": "Physical", "tuition": 2, "rewardsExp": false, "outcomes": "Statistician, data analyst, research", "fields": [0, 1, 1, 0, 0, 0, 0, 0, 0], "interests": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [0, 0, 1, 0, 1, 0, 0, 1], "skills": [0, 0, 1, 1, 0, 1, 1, 0, 0], "about": "Statistical theory and applied data analysis."}, {"id": "ABU-ECO", "uni": "Ahmadu Bello University (ABU)", "name": "MSc Economics", "minClass": 2, "mode": "Physical", "tuition": 2, "rewardsExp": false, "outcomes": "Economist, policy, academia", "fields": [1, 0, 0, 0, 1, 0, 0, 0, 0], "interests": [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [1, 0, 0, 0, 1, 0, 0, 1], "skills": [0, 0, 1, 1, 0, 1, 0, 1, 0], "about": "Economic analysis and policy research."}, {"id": "ABU-PA", "uni": "Ahmadu Bello University (ABU)", "name": "MSc Public Administration", "minClass": 3, "mode": "Hybrid", "tuition": 2, "rewardsExp": true, "outcomes": "Public sector and governance roles", "fields": [1, 0, 0, 0, 1, 0, 1, 0, 0], "interests": [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0], "goals": [1, 0, 1, 0, 0, 0, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 0, 1, 0], "about": "Public administration and governance."}, {"id": "ABU-AGR", "uni": "Ahmadu Bello University (ABU)", "name": "MSc Agronomy", "minClass": 3, "mode": "Physical", "tuition": 2, "rewardsExp": false, "outcomes": "Agronomy, agribusiness, research", "fields": [0, 0, 1, 0, 0, 0, 0, 0, 0], "interests": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], "goals": [0, 0, 1, 0, 1, 0, 0, 1], "skills": [0, 0, 0, 1, 0, 0, 1, 1, 0], "about": "Crop science and agronomy research."}, {"id": "ABU-ENG", "uni": "Ahmadu Bello University (ABU)", "name": "MSc Electrical Engineering", "minClass": 2, "mode": "Physical", "tuition": 2, "rewardsExp": false, "outcomes": "Engineering, research, R&D", "fields": [0, 0, 1, 1, 0, 0, 0, 0, 0], "interests": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], "goals": [0, 1, 1, 0, 1, 0, 0, 1], "skills": [0, 0, 1, 0, 1, 0, 1, 0, 0], "about": "Advanced electrical/electronics engineering."}, {"id": "ABU-MPH", "uni": "Ahmadu Bello University (ABU)", "name": "Master of Public Health (MPH)", "minClass": 2, "mode": "Hybrid", "tuition": 3, "rewardsExp": false, "outcomes": "Public health practice and policy", "fields": [0, 0, 1, 0, 1, 1, 0, 0, 0], "interests": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], "goals": [0, 0, 1, 1, 1, 0, 0, 1], "skills": [0, 1, 0, 1, 0, 1, 0, 1, 0], "about": "Comprehensive public health training."}, {"id": "NOU-DS", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Data Science", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": false, "outcomes": "Data scientist, analyst, ML roles", "fields": [1, 1, 1, 1, 0, 0, 0, 0, 0], "interests": [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [0, 1, 1, 1, 0, 0, 0, 1], "skills": [0, 0, 1, 0, 1, 1, 1, 0, 0], "about": "Distance-learning data science with statistics and programming."}, {"id": "NOU-CYB", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Cybersecurity", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": false, "outcomes": "Security analyst, SOC, consulting", "fields": [0, 1, 1, 1, 0, 0, 0, 0, 0], "interests": [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [1, 1, 1, 1, 0, 0, 0, 0], "skills": [0, 0, 1, 0, 1, 1, 1, 0, 0], "about": "Information security through distance learning."}, {"id": "NOU-FIN", "uni": "National Open University of Nigeria (NOUN)", "name": "MSc Finance", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": true, "outcomes": "Finance manager, analyst, treasury", "fields": [1, 0, 0, 0, 1, 0, 0, 0, 0], "interests": [0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0], "goals": [1, 1, 1, 0, 0, 0, 0, 0], "skills": [0, 0, 1, 0, 0, 1, 1, 1, 0], "about": "Corporate finance, investment and financial analysis."}, {"id": "ABU-AGE", "uni": "Ahmadu Bello University (ABU)", "name": "MSc Agricultural Economics", "minClass": 3, "mode": "Physical", "tuition": 2, "rewardsExp": false, "outcomes": "Agric economist, policy, agribusiness", "fields": [1, 0, 1, 0, 1, 0, 0, 0, 0], "interests": [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1], "goals": [0, 0, 1, 0, 1, 0, 0, 1], "skills": [0, 0, 1, 1, 0, 1, 0, 1, 0], "about": "Economics applied to agriculture and rural development."}, {"id": "MIV-DM", "uni": "Miva Open University", "name": "MSc Digital Marketing", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": true, "outcomes": "Digital marketer, brand, growth roles", "fields": [1, 0, 0, 0, 1, 0, 1, 0, 0], "interests": [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], "goals": [1, 1, 1, 0, 0, 1, 0, 0], "skills": [0, 1, 0, 0, 0, 0, 1, 1, 0], "about": "Online, data-driven and digital marketing strategy."}, {"id": "MIV-PM", "uni": "Miva Open University", "name": "MSc Project Management", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": true, "outcomes": "Project/programme manager, PMO", "fields": [1, 1, 1, 1, 1, 1, 1, 1, 1], "interests": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0], "goals": [1, 1, 1, 0, 0, 0, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 1, 0, 1], "about": "Planning, delivery and governance of projects."}, {"id": "MIV-HRM", "uni": "Miva Open University", "name": "MSc Human Resource Management", "minClass": 3, "mode": "Online", "tuition": 2, "rewardsExp": true, "outcomes": "HR manager, people ops, L&D", "fields": [1, 0, 0, 0, 1, 0, 0, 0, 0], "interests": [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], "goals": [1, 1, 1, 0, 0, 0, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 1, 1, 0], "about": "Strategic HR, talent and organisational behaviour."}, {"id": "MIV-LEAD", "uni": "Miva Open University", "name": "MSc Leadership & Management", "minClass": 3, "mode": "Online", "tuition": 3, "rewardsExp": true, "outcomes": "Senior leadership and management roles", "fields": [1, 1, 1, 1, 1, 1, 1, 1, 1], "interests": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0], "goals": [1, 0, 1, 0, 0, 1, 1, 0], "skills": [1, 1, 0, 0, 0, 0, 1, 0, 1], "about": "Leadership theory, strategy and people management."}];
+const FIELDS=['Business & Management','Computing & IT','Pure & Applied Sciences','Engineering','Social Sciences','Health Sciences','Arts & Humanities','Law','Other / Open'];
+const INTERESTS=['Artificial Intelligence','Cybersecurity','Data Science','Human Resources','Business','Marketing','Finance','Accounting','Public Administration','Public Health','Project Management','Supply Chain','Leadership','Entrepreneurship','Education','Agriculture'];
+const GOALS=['Promotion','Better salary','Career change','Migration','Academic career','Entrepreneurship','Leadership','Research'];
+const SKILLS=['Leadership','Communication','Mathematics','Research','Programming','Data Analysis','Problem Solving','Writing','Project Management'];
+const CLASSES=[['First Class',1],['Second Class Upper',2],['Second Class Lower',3],['Third Class',4],['Pass',5]];
+const EXP=[['None',0],['1–2',2],['3–5',4],['6–10',8],['10+',12]];
+const BUDGET=[['Under ₦1 million',1],['₦1–2 million',2],['₦2–3 million',3],['₦3 million+',4]];
+const TUITION_RANGE={1:'Under ₦1,000,000',2:'₦1,000,000 – ₦2,000,000',3:'₦2,000,000 – ₦3,000,000',4:'₦3,000,000+'};
+const MODES=['Online','Physical','Hybrid'];
+const DEGREES=[['Accounting','Business & Management'],['Business Administration','Business & Management'],['Economics','Social Sciences'],['Finance','Business & Management'],['Computer Science','Computing & IT'],['Software Engineering','Computing & IT'],['Information Technology','Computing & IT'],['Mathematics','Pure & Applied Sciences'],['Statistics','Pure & Applied Sciences'],['Physics','Pure & Applied Sciences'],['Chemistry','Pure & Applied Sciences'],['Biology','Pure & Applied Sciences'],['Biochemistry','Pure & Applied Sciences'],['Microbiology','Pure & Applied Sciences'],['Political Science','Social Sciences'],['Sociology','Social Sciences'],['Psychology','Social Sciences'],['English','Arts & Humanities'],['Law','Law'],['Architecture','Engineering'],['Civil Engineering','Engineering'],['Mechanical Engineering','Engineering'],['Electrical Engineering','Engineering'],['Agriculture','Pure & Applied Sciences'],['Nursing','Health Sciences'],['Pharmacy','Health Sciences'],['Medicine','Health Sciences'],['Mass Communication','Arts & Humanities'],['Education','Social Sciences'],['Other','Other / Open']];
+const DEGREE_FIELD=Object.fromEntries(DEGREES);
+const DEFAULT_WEIGHTS={interest:10,goal:6,skill:2,delivery:8,budget:8,uni:5,exp:6};
+const UNI_MONO={'Miva Open University':['M','linear-gradient(135deg,#F2B450,#E3982A)'],'National Open University of Nigeria (NOUN)':['N','linear-gradient(135deg,#27C2A6,#1c8f7c)'],'Ahmadu Bello University (ABU)':['A','linear-gradient(135deg,#8C6CFF,#6E4BFF)']};
+
+// ---------- storage ----------
+const LS={courses:'talore_courses',weights:'talore_weights',subs:'talore_subs',progress:'talore_progress'};
+function getCourses(){try{return JSON.parse(localStorage.getItem(LS.courses))||SEED_COURSES;}catch(e){return SEED_COURSES;}}
+function setCourses(c){localStorage.setItem(LS.courses,JSON.stringify(c));}
+function getWeights(){try{return Object.assign({},DEFAULT_WEIGHTS,JSON.parse(localStorage.getItem(LS.weights)));}catch(e){return {...DEFAULT_WEIGHTS};}}
+function setWeights(w){localStorage.setItem(LS.weights,JSON.stringify(w));}
+function getSubs(){try{return JSON.parse(localStorage.getItem(LS.subs))||[];}catch(e){return [];}}
+function addSub(s){const a=getSubs();a.push(s);localStorage.setItem(LS.subs,JSON.stringify(a));}
+function clearSubs(){localStorage.removeItem(LS.subs);}
+
+// ---------- state ----------
+let profile=blankProfile();
+let stepIndex=0;
+function blankProfile(){return {fullName:'',email:'',country:'',state:'',degree:'',classification:'',gradYear:'',experience:'',management:'',interests:[],goals:[],skills:Object.fromEntries(SKILLS.map(s=>[s,3])),mode:'',budget:'',prefUni:''};}
+
+// ---------- assessment config ----------
+const STEPS=[
+ {cat:'Personal Information',title:'Let’s start with you',sub:'We use your name and email only to personalise your results.',
+  fields:[{k:'fullName',t:'text',label:'Full name',ph:'e.g. Adaeze Okafor',req:true},
+          {k:'email',t:'email',label:'Email address',ph:'you@email.com',req:true},
+          {k:'country',t:'text',label:'Country',ph:'Nigeria'},
+          {k:'state',t:'text',label:'State',ph:'Lagos'}]},
+ {cat:'Academic Background',title:'Your Bachelor’s degree',sub:'Your field and classification decide which programmes you’re eligible for.',
+  fields:[{k:'degree',t:'search',label:'Bachelor’s degree',req:true,opts:DEGREES.map(d=>d[0])},
+          {k:'classification',t:'single',label:'Degree classification',req:true,opts:CLASSES.map(c=>c[0])},
+          {k:'gradYear',t:'text',label:'Graduation year (optional)',ph:'2021'}]},
+ {cat:'Professional Experience',title:'Your experience',sub:'Some programmes reward work and leadership experience.',
+  fields:[{k:'experience',t:'single',label:'Years of professional experience',req:true,opts:EXP.map(e=>e[0])},
+          {k:'management',t:'toggle',label:'Do you have management experience?',req:true,opts:['Yes','No']}]},
+ {cat:'Skills Assessment',title:'Rate your skills',sub:'Slide each from 1 (beginner) to 5 (expert). This sharpens your matches.',
+  fields:[{k:'skills',t:'sliders',label:'',opts:SKILLS}]},
+ {cat:'Areas of Interest',title:'What interests you?',sub:'Pick everything that appeals — choose at least one.',
+  fields:[{k:'interests',t:'multi',label:'',req:true,opts:INTERESTS}]},
+ {cat:'Career Goals',title:'What should this degree achieve?',sub:'Select the outcomes that matter most to you.',
+  fields:[{k:'goals',t:'multi',label:'',req:true,opts:GOALS}]},
+ {cat:'Study Preferences',title:'How you want to study',sub:'Mode, budget, and any university preference.',
+  fields:[{k:'mode',t:'single',label:'Preferred learning mode',req:true,opts:MODES},
+          {k:'budget',t:'single',label:'Budget (per programme)',req:true,opts:BUDGET.map(b=>b[0])},
+          {k:'prefUni',t:'unicards',label:'Preferred university',req:true,opts:['Miva Open University','National Open University of Nigeria (NOUN)','Ahmadu Bello University (ABU)','No Preference']}]}
+];
+
+// ---------- navigation ----------
+function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function startAssessment(){profile=blankProfile();stepIndex=0;saveProgress();renderStep();show('assessment');}
+function resumeAssessment(){renderStep();show('assessment');}
+function enterAdmin(){document.getElementById('loginMask').classList.add('show');setTimeout(()=>document.getElementById('adminPass').focus(),50);}
+function closeLogin(){document.getElementById('loginMask').classList.remove('show');document.getElementById('adminPass').value='';}
+function checkAdmin(){if(document.getElementById('adminPass').value==='talore2026'){closeLogin();renderAdmin();show('admin');}else{document.getElementById('adminPass').style.borderColor='var(--danger)';}}
+
+// ---------- progress / autosave ----------
+function saveProgress(){localStorage.setItem(LS.progress,JSON.stringify({profile,stepIndex}));flashSaved();}
+function flashSaved(){const t=document.getElementById('savedTag');if(!t)return;t.classList.add('show');clearTimeout(window._st);window._st=setTimeout(()=>t.classList.remove('show'),1400);}
+function updateProgress(){const pct=Math.round((stepIndex/STEPS.length)*100);document.getElementById('pbarFill').style.width=pct+'%';document.getElementById('pStep').textContent='Step '+(stepIndex+1)+' of '+STEPS.length;document.getElementById('pPct').textContent=pct+'% complete';}
+
+// ---------- step rendering ----------
+function renderStep(){
+  const s=STEPS[stepIndex];updateProgress();
+  let h='<div class="step"><div class="step-head"><span class="eyebrow">'+s.cat+'</span><h2>'+s.title+'</h2><p>'+s.sub+'</p></div><div class="fields">';
+  s.fields.forEach(f=>{h+=renderField(f);});
+  h+='</div><div class="nav-row">'+
+     '<button class="btn btn-ghost" onclick="prevStep()" '+(stepIndex===0?'style="visibility:hidden"':'')+'>← Back</button>'+
+     '<button class="btn btn-primary" onclick="nextStep()">'+(stepIndex===STEPS.length-1?'See my matches →':'Continue →')+'</button>'+
+     '</div></div>';
+  document.getElementById('stepHost').innerHTML=h;
+  bindFields(s);
+}
+function renderField(f){
+  let inner='';const v=profile[f.k];
+  if(f.t==='text'||f.t==='email'){inner='<input class="txt" type="'+(f.t==='email'?'email':'text')+'" id="fld_'+f.k+'" placeholder="'+(f.ph||'')+'" value="'+escAttr(v)+'">';}
+  else if(f.t==='single'){inner='<div class="opts" id="fld_'+f.k+'">'+f.opts.map(o=>'<button class="opt'+(v===o?' sel':'')+'" data-v="'+escAttr(o)+'">'+o+'</button>').join('')+'</div>';}
+  else if(f.t==='toggle'){inner='<div class="toggle-row" id="fld_'+f.k+'">'+f.opts.map(o=>'<button class="toggle'+(v===o?' sel':'')+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>';}
+  else if(f.t==='multi'){inner='<div class="chips" id="fld_'+f.k+'">'+f.opts.map(o=>'<button class="chip'+(v.includes(o)?' sel':'')+'" data-v="'+escAttr(o)+'">'+o+'</button>').join('')+'</div>';}
+  else if(f.t==='sliders'){inner='<div class="slider-row" id="fld_'+f.k+'">'+f.opts.map(o=>{const sv=profile.skills[o]||3;return '<div class="slider-item"><span class="sname">'+o+'</span><input type="range" min="1" max="5" step="1" value="'+sv+'" data-s="'+escAttr(o)+'" style="--p:'+((sv-1)/4*100)+'%"><span class="sval" data-for="'+escAttr(o)+'">'+sliderLabel(sv)+'</span></div>';}).join('')+'</div>';}
+  else if(f.t==='unicards'){inner='<div class="uni-cards" id="fld_'+f.k+'">'+f.opts.map(o=>{const m=UNI_MONO[o];return '<button class="uni-card'+(v===o?' sel':'')+'" data-v="'+escAttr(o)+'">'+(m?'<div class="mono" style="background:'+m[1]+'">'+m[0]+'</div>':'<div class="mono" style="background:var(--panel-2);color:var(--muted)">★</div>')+'<h3>'+shortUni(o)+'</h3><p>'+(o==='No Preference'?'Show me everything':'Focus on this school')+'</p></button>';}).join('')+'</div>';}
+  else if(f.t==='search'){inner='<div class="ssel" id="fld_'+f.k+'"><input class="txt" id="ssel_input_'+f.k+'" placeholder="Type to search your degree…" autocomplete="off" value="'+escAttr(v)+'"><div class="ssel-list" id="ssel_list_'+f.k+'"></div></div>';}
+  return '<div class="field" id="field_'+f.k+'">'+(f.label?'<label class="flabel">'+f.label+'</label>':'')+inner+(f.hint?'<div class="hint">'+f.hint+'</div>':'')+'<div class="err">Please complete this to continue.</div></div>';
+}
+function sliderLabel(v){return ['','Beginner','Basic','Competent','Strong','Expert'][v];}
+function shortUni(u){return u.replace(' (NOUN)','').replace(' (ABU)','').replace('National Open University of Nigeria','NOUN').replace('Ahmadu Bello University','ABU');}
+
+function bindFields(s){
+  s.fields.forEach(f=>{
+    const host=document.getElementById('fld_'+f.k);
+    if(f.t==='text'||f.t==='email'){host.addEventListener('input',e=>{profile[f.k]=e.target.value;clearErr(f.k);saveProgress();});}
+    else if(f.t==='single'||f.t==='toggle'||f.t==='unicards'){host.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{profile[f.k]=b.dataset.v;host.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');clearErr(f.k);saveProgress();}));}
+    else if(f.t==='multi'){host.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const val=b.dataset.v;const i=profile[f.k].indexOf(val);if(i>=0)profile[f.k].splice(i,1);else profile[f.k].push(val);b.classList.toggle('sel');clearErr(f.k);saveProgress();}));}
+    else if(f.t==='sliders'){host.querySelectorAll('input[type=range]').forEach(r=>r.addEventListener('input',()=>{const sk=r.dataset.s,val=+r.value;profile.skills[sk]=val;r.style.setProperty('--p',((val-1)/4*100)+'%');host.querySelector('[data-for="'+cssEsc(sk)+'"]').textContent=sliderLabel(val);saveProgress();}));}
+    else if(f.t==='search'){bindSearch(f);}
+  });
+}
+function bindSearch(f){
+  const inp=document.getElementById('ssel_input_'+f.k),list=document.getElementById('ssel_list_'+f.k),box=document.getElementById('fld_'+f.k);
+  function draw(q){const ql=(q||'').toLowerCase();const items=f.opts.filter(o=>o.toLowerCase().includes(ql));list.innerHTML=items.length?items.map(o=>'<div class="it" data-v="'+escAttr(o)+'">'+o+'</div>').join(''):'<div class="empty">No match — pick “Other”.</div>';list.querySelectorAll('.it').forEach(it=>it.addEventListener('mousedown',e=>{e.preventDefault();profile[f.k]=it.dataset.v;inp.value=it.dataset.v;box.classList.remove('open');clearErr(f.k);saveProgress();}));}
+  inp.addEventListener('focus',()=>{box.classList.add('open');draw(inp.value);});
+  inp.addEventListener('input',()=>{box.classList.add('open');profile[f.k]='';draw(inp.value);});
+  document.addEventListener('click',e=>{if(!box.contains(e.target))box.classList.remove('open');});
+}
+function clearErr(k){const fl=document.getElementById('field_'+k);if(fl)fl.classList.remove('invalid');}
+
+function validateStep(){const s=STEPS[stepIndex];let ok=true;
+  s.fields.forEach(f=>{if(!f.req)return;let bad=false;const v=profile[f.k];
+    if(f.t==='multi'){bad=!v||v.length===0;}
+    else if(f.t==='email'){bad=!v||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);document.querySelector('#field_email .err').textContent=v?'Enter a valid email address.':'Please complete this to continue.';}
+    else{bad=!v;}
+    if(bad){ok=false;document.getElementById('field_'+f.k).classList.add('invalid');}
+  });return ok;}
+function nextStep(){if(!validateStep()){const f=document.querySelector('.field.invalid');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});return;}
+  if(stepIndex===STEPS.length-1){finish();return;}stepIndex++;saveProgress();renderStep();window.scrollTo({top:0,behavior:'smooth'});}
+function prevStep(){if(stepIndex>0){stepIndex--;saveProgress();renderStep();window.scrollTo({top:0,behavior:'smooth'});}}
+
+// ---------- recommendation engine (parity with Talore workbook) ----------
+function scoreAll(p){
+  const W=getWeights(),courses=getCourses();
+  const field=DEGREE_FIELD[p.degree]||'Other / Open';
+  const fOne=FIELDS.map(f=>f===field?1:0);
+  const iVec=INTERESTS.map(x=>p.interests.includes(x)?1:0);
+  const gVec=GOALS.map(x=>p.goals.includes(x)?1:0);
+  const sVec=SKILLS.map(s=>p.skills[s]||0);
+  const cr=(CLASSES.find(c=>c[0]===p.classification)||['',5])[1];
+  const bb=(BUDGET.find(b=>b[0]===p.budget)||['',4])[1];
+  const ey=(EXP.find(e=>e[0]===p.experience)||['',0])[1];
+  const hasExp=ey>0||p.management==='Yes';
+  const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
+  let res=courses.map(c=>{
+    const eligible=(dot(c.fields,fOne)>0?1:0)*(cr<=c.minClass?1:0);
+    const interest=dot(c.interests,iVec),goal=dot(c.goals,gVec),skill=dot(c.skills,sVec);
+    const delivery=c.mode===p.mode?1:((c.mode==='Hybrid'||p.mode==='Hybrid')?0.5:0);
+    const budget=c.tuition<=bb?1:0;
+    const uni=(p.prefUni!=='No Preference'&&p.prefUni&&c.uni===p.prefUni)?1:0;
+    const exp=(c.rewardsExp&&hasExp)?1:0;
+    const raw=eligible*(W.interest*interest+W.goal*goal+W.skill*skill+W.delivery*delivery+W.budget*budget+W.uni*uni+W.exp*exp);
+    return {c,eligible,interest,goal,skill,delivery,budget,uni,exp,raw,field};
+  });
+  const elig=res.filter(r=>r.eligible===1&&r.raw>0).sort((a,b)=>b.raw-a.raw);
+  const maxRaw=elig.length?elig[0].raw:1;
+  elig.forEach(r=>r.pct=Math.round(55+45*(r.raw/maxRaw)));
+  return {elig,field};
+}
+function reasonText(r,p){
+  const b=['accepts your '+r.field+' background'];
+  if(r.interest>0)b.push('matches '+r.interest+' of your interest area'+(r.interest>1?'s':''));
+  if(r.goal>0)b.push('supports '+r.goal+' of your career goal'+(r.goal>1?'s':''));
+  if(r.delivery===1)b.push('runs in your preferred '+p.mode.toLowerCase()+' mode');else if(r.delivery===0.5)b.push('offers a compatible study mode');
+  b.push(r.budget===1?'fits your budget':'sits above your stated budget');
+  return cap(b.join('; '))+'.';
+}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function classNameFromRank(rk){return (CLASSES.find(c=>c[1]===rk)||['',''])[0];}
+
+// ---------- results ----------
+function finish(){
+  const {elig,field}=scoreAll(profile);
+  const top=elig.slice(0,3),overall=top.length?Math.round(top.reduce((s,r)=>s+r.pct,0)/top.length):0;
+  addSub({date:new Date().toISOString(),name:profile.fullName,email:profile.email,degree:profile.degree,prefUni:profile.prefUni,top:top[0]?top[0].c.name+' — '+shortUni(top[0].c.uni):'No eligible match',overall});
+  localStorage.removeItem(LS.progress);
+  renderResults(elig,overall,field);
+  show('results');
+}
+function renderResults(elig,overall,field){
+  const host=document.getElementById('resultsHost');
+  if(!elig.length){host.innerHTML='<div class="topbar"><div class="brand"><span class="dot">T</span> Talore HR</div><button class="link-btn" onclick="startAssessment()">Start over</button></div><div class="card" style="padding:40px;text-align:center;margin-top:30px"><h2>No eligible match yet</h2><p class="muted" style="max-width:46ch;margin:14px auto 0">With a '+field+' background at '+(profile.classification||'your')+' level, none of the current programmes cleared the entry bar. Try widening your budget or preferred mode, or talk to a Talore advisor.</p><button class="btn btn-primary" style="margin-top:22px" onclick="startAssessment()">Retake assessment</button></div>';return;}
+  const top=elig[0],rest=elig.slice(1,5),alts=elig.slice(5,8);
+  const uniGroups={};elig.forEach(r=>{(uniGroups[r.c.uni]=uniGroups[r.c.uni]||[]).push(r);});
+  const pathways=[...new Set(elig.slice(0,3).flatMap(r=>(r.c.outcomes||'').split(/,\s*/)).filter(Boolean))].slice(0,6);
+  const gapSkills=(top.c.skills.map((on,i)=>on&&(profile.skills[SKILLS[i]]||0)<3?SKILLS[i]:null).filter(Boolean));
+
+  let h='';
+  h+='<div class="topbar"><div class="brand"><span class="dot">T</span> Talore HR</div><button class="link-btn" onclick="startAssessment()">↻ Retake</button></div>';
+  h+='<div class="res-head"><div><span class="eyebrow">Your results</span><h2>'+(profile.fullName?firstName(profile.fullName)+'’s':'Your')+' postgraduate roadmap</h2><p class="muted">Based on a '+field+' background and '+(profile.classification||'your degree')+'. '+elig.length+' eligible programmes found.</p></div></div>';
+
+  // hero match
+  h+='<div class="card hero-match"><div class="gauge" id="heroGauge"></div><div class="hm-info"><span class="tag">✓ Eligible · best overall fit</span><h3>'+top.c.name+'</h3><div class="uni">'+top.c.uni+'</div><p class="why">'+reasonText(top,profile)+'</p><div class="badges"><span class="badge ok">Match '+top.pct+'%</span><span class="badge">'+top.c.mode+'</span><span class="badge">'+TUITION_RANGE[top.c.tuition]+'</span><span class="badge">Min: '+classNameFromRank(top.c.minClass)+'</span></div></div></div>';
+
+  // overall + grid
+  h+='<div class="sec-title"><span class="bar"></span>Profile compatibility</div>';
+  h+='<div class="grid-2"><div>';
+  // ranked recommendations
+  rest.unshift(top);
+  h+='<div class="sec-title" style="margin-top:6px"><span class="bar"></span>Top recommended programmes</div>';
+  rest.forEach((r,i)=>{
+    h+='<div class="card rec"><div class="rec-top"><div><h3>'+(i+1)+'. '+r.c.name+'</h3><div class="runi">'+r.c.uni+'</div></div><div class="rpct">'+r.pct+'<small>%</small></div></div>'+
+       '<div class="mini-bars">'+miniBar('Interest',r.interest,5)+miniBar('Goals',r.goal,4)+miniBar('Mode',r.delivery,1)+miniBar('Budget',r.budget,1)+'</div>'+
+       '<div class="why">'+reasonText(r,profile)+'</div>'+
+       '<div class="meta"><span>Mode · '+r.c.mode+'</span><span>Tuition · '+TUITION_RANGE[r.c.tuition]+'</span><span>Entry · '+classNameFromRank(r.c.minClass)+'+</span><span>Careers · '+(r.c.outcomes||'—')+'</span></div></div>';
+  });
+  h+='</div><div>';
+  // overall gauge small + charts
+  h+='<div class="card" style="padding:24px;text-align:center"><div class="gauge" id="overallGauge" style="width:160px;height:160px"></div><p class="muted" style="font-size:13px;margin-top:6px">Average match across your top programmes</p></div>';
+  h+='<div class="sec-title"><span class="bar"></span>Compatibility by programme</div><div class="card bars-chart" style="padding:22px" id="barsChart"></div>';
+  h+='<div class="sec-title"><span class="bar"></span>Your skill profile</div><div class="card radar-wrap" style="padding:18px" id="radar"></div>';
+  h+='</div></div>';
+
+  // universities
+  h+='<div class="sec-title"><span class="bar"></span>Universities you’re eligible for</div><div class="uni-tiles">';
+  Object.keys(uniGroups).forEach(u=>{const m=UNI_MONO[u]||['★','var(--panel-2)'];const g=uniGroups[u];h+='<div class="card uni-tile"><div class="mono" style="background:'+m[1]+'">'+m[0]+'</div><b>'+shortUni(u)+'</b><div class="c">'+g.length+'</div><small>eligible programme'+(g.length>1?'s':'')+'</small></div>';});
+  h+='</div>';
+
+  // pathways + skills to strengthen
+  h+='<div class="grid-2" style="margin-top:8px"><div><div class="sec-title"><span class="bar"></span>Career opportunities</div><div class="pathways">'+(pathways.length?pathways.map(p=>'<span class="path">'+p+'</span>').join(''):'<span class="muted">Add interests to surface pathways.</span>')+'</div></div>';
+  h+='<div><div class="sec-title"><span class="bar"></span>Skills to strengthen</div><div class="skillgaps">'+(gapSkills.length?gapSkills.map(s=>'<span class="gap">Build <b>'+s+'</b></span>').join(''):'<span class="path">Your skills already align well</span>')+'</div></div></div>';
+
+  // roadmap
+  h+='<div class="sec-title"><span class="bar"></span>Your career roadmap</div><div class="card roadmap" id="roadmap"></div>';
+
+  // alternatives
+  if(alts.length){h+='<div class="sec-title"><span class="bar"></span>Alternatives worth considering</div><div class="alt-list">';
+    alts.forEach(r=>{h+='<div class="card rec"><div class="rec-top"><div><h3>'+r.c.name+'</h3><div class="runi">'+r.c.uni+'</div></div><div class="rpct">'+r.pct+'<small>%</small></div></div><div class="why">'+reasonText(r,profile)+'</div></div>';});
+    h+='</div>';}
+
+  h+='<p class="footnote">Recommendations use a weighted model across eligibility, interests, goals, skills, study mode and budget. Programme data is an editable starter set — confirm current admission requirements and fees with each university before applying.</p>';
+  host.innerHTML=h;
+
+  // animate
+  requestAnimationFrame(()=>{
+    drawGauge('heroGauge',top.pct,200);
+    drawGauge('overallGauge',overall,160);
+    setTimeout(()=>document.querySelectorAll('.mini-bars .mb i').forEach(el=>el.style.width=el.dataset.w),120);
+    drawBars(elig.slice(0,6));
+    drawRadar();
+    drawRoadmap(top,field);
+  });
+}
+function firstName(n){return n.trim().split(/\s+/)[0];}
+function miniBar(label,val,max){const w=Math.round(val/max*100);return '<div class="mb" title="'+label+'"><i data-w="'+w+'%"></i></div>';}
+
+function drawGauge(id,pct,size){
+  const el=document.getElementById(id);if(!el)return;const r=size/2-14,c=2*Math.PI*r,off=c*(1-pct/100);
+  el.innerHTML='<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><defs><linearGradient id="gg'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F2B450"/><stop offset="1" stop-color="#27C2A6"/></linearGradient></defs><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="12"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="url(#gg'+id+')" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+c+'" style="transition:stroke-dashoffset 1.3s cubic-bezier(.2,.7,.2,1)"/></svg><div class="val"><b>0</b><span>match</span></div>';
+  const ring=el.querySelectorAll('circle')[1],num=el.querySelector('.val b');
+  requestAnimationFrame(()=>{ring.style.strokeDashoffset=off;});
+  let cur=0;const step=()=>{cur+=Math.ceil((pct-cur)/8);if(cur>=pct)cur=pct;num.textContent=cur+'%';if(cur<pct)requestAnimationFrame(step);};requestAnimationFrame(step);
+}
+function drawBars(list){
+  const el=document.getElementById('barsChart');if(!el)return;
+  el.innerHTML=list.map(r=>'<div class="bc-row"><div class="bc-name"><b>'+r.c.name+'</b><em>'+shortUni(r.c.uni)+'</em></div><div class="bc-val">'+r.pct+'%</div><div class="bc-track"><i data-w="'+r.pct+'%"></i></div></div>').join('');
+  setTimeout(()=>el.querySelectorAll('.bc-track i').forEach(i=>i.style.width=i.dataset.w),150);
+}
+function drawRadar(){
+  const el=document.getElementById('radar');if(!el)return;const size=260,cx=size/2,cy=size/2,R=92,n=SKILLS.length;
+  function pt(i,rad){const a=-Math.PI/2+i*2*Math.PI/n;return [cx+rad*Math.cos(a),cy+rad*Math.sin(a)];}
+  let grid='';for(let g=1;g<=4;g++){const rr=R*g/4;let pts=[];for(let i=0;i<n;i++)pts.push(pt(i,rr).join(','));grid+='<polygon points="'+pts.join(' ')+'" fill="none" stroke="rgba(255,255,255,.07)"/>';}
+  let axes='',labels='';for(let i=0;i<n;i++){const[x,y]=pt(i,R);axes+='<line x1="'+cx+'" y1="'+cy+'" x2="'+x+'" y2="'+y+'" stroke="rgba(255,255,255,.07)"/>';const[lx,ly]=pt(i,R+18);labels+='<text x="'+lx+'" y="'+ly+'" font-size="9" fill="#A39FC0" text-anchor="middle" dominant-baseline="middle">'+SKILLS[i].split(' ')[0]+'</text>';}
+  let vpts=[];for(let i=0;i<n;i++){const val=(profile.skills[SKILLS[i]]||0)/5;vpts.push(pt(i,R*val).join(','));}
+  el.innerHTML='<svg width="100%" viewBox="0 0 '+size+' '+(size)+'" style="max-width:300px">'+grid+axes+'<polygon points="'+vpts.join(' ')+'" fill="rgba(242,180,80,.22)" stroke="#F2B450" stroke-width="2" style="opacity:0;transition:opacity .8s"/>'+labels+'</svg>';
+  requestAnimationFrame(()=>{const p=el.querySelector('polygon[fill^="rgba(242"]');if(p)p.style.opacity=1;});
+}
+function drawRoadmap(top,field){
+  const el=document.getElementById('roadmap');if(!el)return;
+  const goal=profile.goals[0]||'career growth';
+  const careers=(top.c.outcomes||'').split(/,\s*/);
+  const nodes=[
+    {t:'Today',s:field+' graduate'+(profile.experience&&profile.experience!=='None'?' · '+profile.experience+' yrs exp':'')},
+    {t:'Study',s:top.c.name},
+    {t:'1–2 yrs',s:careers[0]||'Applied role'},
+    {t:'3–5 yrs',s:careers[1]||careers[0]||'Senior role'},
+    {t:'Long term',s:goalPhrase(goal)}
+  ];
+  const W=960,H=230,pad=70,seg=(W-pad*2)/(nodes.length-1);
+  let path='M '+pad+' '+(H-70);let pts=[];
+  nodes.forEach((n,i)=>{const x=pad+seg*i,y=(i%2===0)?H-70:80;pts.push([x,y]);});
+  for(let i=1;i<pts.length;i++){const[px,py]=pts[i-1],[x,y]=pts[i];const mx=(px+x)/2;path+=' C '+mx+' '+py+' '+mx+' '+y+' '+x+' '+y;}
+  let circles='',texts='';
+  pts.forEach((p,i)=>{const[x,y]=p;circles+='<circle cx="'+x+'" cy="'+y+'" r="9" fill="#130E29" stroke="url(#rg)" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="3.5" fill="#F2B450"/>';
+    const ty=(y<H/2)?y-20:y+26;texts+='<text x="'+x+'" y="'+(ty-14)+'" font-size="11" font-family="Space Mono" fill="#F2B450" text-anchor="middle">'+nodes[i].t+'</text>';
+    texts+=wrapText(nodes[i].s,x,ty,16,'#ECE9F7',13);});
+  el.innerHTML='<svg class="road-svg" viewBox="0 0 '+W+' '+H+'"><defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#F2B450"/><stop offset="1" stop-color="#27C2A6"/></linearGradient></defs><path d="'+path+'" fill="none" stroke="url(#rg)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2400" stroke-dashoffset="2400" id="roadPath"/><g class="road-node">'+circles+texts+'</g></svg>';
+  const rp=document.getElementById('roadPath');requestAnimationFrame(()=>{rp.style.transition='stroke-dashoffset 2s ease';rp.style.strokeDashoffset='0';});
+}
+function goalPhrase(g){const m={'Promotion':'Senior / leadership position','Better salary':'Higher earning role','Career change':'Established in new field','Migration':'Global career mobility','Academic career':'Research / academic post','Entrepreneurship':'Founder / business owner','Leadership':'Executive leadership','Research':'Specialist / R&D lead'};return m[g]||'Career growth';}
+function wrapText(s,x,y,lh,fill,fs){const words=s.split(' ');let lines=[],cur='';words.forEach(w=>{if((cur+' '+w).length>20){lines.push(cur);cur=w;}else cur=cur?cur+' '+w:w;});if(cur)lines.push(cur);return lines.map((l,i)=>'<text x="'+x+'" y="'+(y+i*lh)+'" font-size="'+fs+'" fill="'+fill+'" text-anchor="middle">'+escHtml(l)+'</text>').join('');}
+
+// ---------- admin ----------
+let adminTab='submissions';
+function renderAdmin(){
+  const host=document.getElementById('adminHost');
+  host.innerHTML='<div class="topbar"><div class="brand"><span class="dot">T</span> Talore HR · Admin</div><button class="link-btn" onclick="show(\'welcome\')">← Exit to site</button></div>'+
+   '<div class="admin-head"><div><span class="eyebrow">Control room</span><h2 style="font-size:30px">Programme & intake management</h2></div></div>'+
+   '<div class="tabs">'+['submissions','programmes','universities','scoring','analytics'].map(t=>'<button class="tab'+(t===adminTab?' active':'')+'" onclick="setTab(\''+t+'\')">'+cap(t)+'</button>').join('')+'</div>'+
+   '<div id="adminBody"></div>';
+  renderAdminBody();
+}
+function setTab(t){adminTab=t;document.querySelectorAll('#admin .tab').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===t));renderAdminBody();}
+function renderAdminBody(){const b=document.getElementById('adminBody');
+  if(adminTab==='submissions')b.innerHTML=adminSubs();
+  else if(adminTab==='programmes')b.innerHTML=adminProgs();
+  else if(adminTab==='universities')b.innerHTML=adminUnis();
+  else if(adminTab==='scoring')b.innerHTML=adminScoring();
+  else b.innerHTML=adminAnalytics();
+}
+function adminSubs(){const s=getSubs();
+  let h='<div class="card" style="padding:22px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="font-size:18px">Submissions ('+s.length+')</h3><div style="display:flex;gap:10px"><button class="btn btn-ghost" onclick="exportSubs(\'csv\')">Export CSV</button><button class="btn btn-ghost" onclick="exportSubs(\'json\')">Export JSON</button>'+(s.length?'<button class="btn btn-ghost" onclick="if(confirm(\'Clear all submissions?\')){clearSubs();renderAdminBody();}">Clear</button>':'')+'</div></div>';
+  if(!s.length){h+='<p class="note-inline">No submissions yet. Completed assessments will appear here.</p></div>';return h;}
+  h+='<div style="overflow:auto"><table><tr><th>Date</th><th>Name</th><th>Email</th><th>Degree</th><th>Preferred uni</th><th>Top match</th><th>Score</th></tr>';
+  s.slice().reverse().forEach(r=>{h+='<tr><td>'+new Date(r.date).toLocaleDateString()+'</td><td>'+escHtml(r.name)+'</td><td>'+escHtml(r.email)+'</td><td>'+escHtml(r.degree)+'</td><td>'+escHtml(shortUni(r.prefUni||'—'))+'</td><td>'+escHtml(r.top)+'</td><td>'+r.overall+'%</td></tr>';});
+  h+='</table></div></div>';return h;}
+function adminProgs(){const c=getCourses();
+  let h='<div class="card" style="padding:22px;margin-bottom:18px"><h3 style="font-size:18px;margin-bottom:6px">Programmes ('+c.length+')</h3><p class="note-inline">Edit feeds the live recommendation engine. Tags drive matching.</p><div style="overflow:auto"><table><tr><th>ID</th><th>Programme</th><th>University</th><th>Mode</th><th>Min class</th><th>Tuition</th><th></th></tr>';
+  c.forEach((p,i)=>{h+='<tr><td>'+p.id+'</td><td>'+escHtml(p.name)+'</td><td>'+escHtml(shortUni(p.uni))+'</td><td>'+p.mode+'</td><td>'+classNameFromRank(p.minClass)+'</td><td>'+TUITION_RANGE[p.tuition].replace(' – ','–')+'</td><td><span class="e" onclick="editProg('+i+')">edit</span><span class="x" onclick="removeProg('+i+')">✕</span></td></tr>';});
+  h+='</table></div></div>'+progForm();return h;}
+let editIdx=-1;let formTags={fields:[],interests:[],goals:[],skills:[]};
+function progForm(){const unis=[...new Set(getCourses().map(c=>c.uni))];
+  return '<div class="card" style="padding:22px" id="progForm"><h3 style="font-size:17px;margin-bottom:6px">'+(editIdx>=0?'Edit programme':'Add a programme')+'</h3>'+
+   '<div class="form-grid">'+
+   '<div><label>Programme ID</label><input id="pf_id" placeholder="MIV-NEW"></div>'+
+   '<div><label>University</label><select id="pf_uni">'+unis.map(u=>'<option>'+escHtml(u)+'</option>').join('')+'</select></div>'+
+   '<div class="f2"><label>Programme name</label><input id="pf_name" placeholder="MSc ..."></div>'+
+   '<div><label>Delivery mode</label><select id="pf_mode">'+MODES.map(m=>'<option>'+m+'</option>').join('')+'</select></div>'+
+   '<div><label>Minimum class</label><select id="pf_class">'+CLASSES.map(c=>'<option value="'+c[1]+'">'+c[0]+'</option>').join('')+'</select></div>'+
+   '<div><label>Tuition band</label><select id="pf_tuition">'+Object.keys(TUITION_RANGE).map(k=>'<option value="'+k+'">'+TUITION_RANGE[k]+'</option>').join('')+'</select></div>'+
+   '<div><label>Rewards experience</label><select id="pf_exp"><option value="false">No</option><option value="true">Yes</option></select></div>'+
+   '<div class="f2"><label>Career outcomes (comma separated)</label><input id="pf_out" placeholder="Analyst, manager"></div>'+
+   '</div>'+
+   tagPicker('Accepted fields','fields',FIELDS)+tagPicker('Interest tags','interests',INTERESTS)+tagPicker('Goal tags','goals',GOALS)+tagPicker('Key skills','skills',SKILLS)+
+   '<div style="display:flex;gap:10px;margin-top:16px">'+(editIdx>=0?'<button class="btn btn-ghost" onclick="cancelEdit()">Cancel</button>':'')+'<button class="btn btn-primary" onclick="saveProg()">'+(editIdx>=0?'Save changes':'Add programme')+'</button></div></div>';}
+function tagPicker(label,key,opts){return '<div style="margin-top:12px"><label style="font-size:12.5px;color:var(--muted)">'+label+'</label><div class="tagpick" data-key="'+key+'">'+opts.map(o=>'<span class="tp'+(formTags[key].includes(o)?' on':'')+'" onclick="toggleTag(\''+key+'\',this,\''+escAttr(o).replace(/'/g,"\\'")+'\')">'+o+'</span>').join('')+'</div></div>';}
+function toggleTag(key,el,val){const i=formTags[key].indexOf(val);if(i>=0)formTags[key].splice(i,1);else formTags[key].push(val);el.classList.toggle('on');}
+function editProg(i){const p=getCourses()[i];editIdx=i;formTags={fields:FIELDS.filter((f,k)=>p.fields[k]),interests:INTERESTS.filter((f,k)=>p.interests[k]),goals:GOALS.filter((f,k)=>p.goals[k]),skills:SKILLS.filter((f,k)=>p.skills[k])};renderAdminBody();
+  setVal('pf_id',p.id);setVal('pf_uni',p.uni);setVal('pf_name',p.name);setVal('pf_mode',p.mode);setVal('pf_class',p.minClass);setVal('pf_tuition',p.tuition);setVal('pf_exp',String(p.rewardsExp));setVal('pf_out',p.outcomes||'');document.getElementById('progForm').scrollIntoView({behavior:'smooth'});}
+function cancelEdit(){editIdx=-1;formTags={fields:[],interests:[],goals:[],skills:[]};renderAdminBody();}
+function saveProg(){const id=val('pf_id').trim(),name=val('pf_name').trim();if(!id||!name){alert('ID and name are required.');return;}
+  const p={id,uni:val('pf_uni'),name,mode:val('pf_mode'),minClass:+val('pf_class'),tuition:+val('pf_tuition'),rewardsExp:val('pf_exp')==='true',outcomes:val('pf_out'),about:'',
+    fields:FIELDS.map(f=>formTags.fields.includes(f)?1:0),interests:INTERESTS.map(f=>formTags.interests.includes(f)?1:0),goals:GOALS.map(f=>formTags.goals.includes(f)?1:0),skills:SKILLS.map(f=>formTags.skills.includes(f)?1:0)};
+  const c=getCourses();if(editIdx>=0)c[editIdx]=p;else c.push(p);setCourses(c);editIdx=-1;formTags={fields:[],interests:[],goals:[],skills:[]};renderAdminBody();}
+function removeProg(i){if(!confirm('Remove this programme?'))return;const c=getCourses();c.splice(i,1);setCourses(c);renderAdminBody();}
+function adminUnis(){const unis=[...new Set(getCourses().map(c=>c.uni))];
+  let h='<div class="card" style="padding:22px"><h3 style="font-size:18px;margin-bottom:6px">Universities</h3><p class="note-inline">Add a school to make it selectable when creating programmes. Removing a school deletes its programmes.</p><table><tr><th>University</th><th>Programmes</th><th></th></tr>';
+  unis.forEach(u=>{const n=getCourses().filter(c=>c.uni===u).length;h+='<tr><td>'+escHtml(u)+'</td><td>'+n+'</td><td><span class="x" onclick="removeUni(\''+escAttr(u).replace(/'/g,"\\'")+'\')">✕</span></td></tr>';});
+  h+='</table><div class="form-grid" style="margin-top:16px"><div class="f2"><label>New university name</label><input id="newUni" placeholder="University of Lagos"></div></div><button class="btn btn-primary" onclick="addUni()">Add university</button></div>';return h;}
+function addUni(){const name=val('newUni').trim();if(!name)return;const c=getCourses();c.push({id:'NEW-'+Date.now().toString().slice(-4),uni:name,name:'New Programme (edit me)',mode:'Online',minClass:3,tuition:2,rewardsExp:false,outcomes:'',about:'',fields:FIELDS.map(_=>1),interests:INTERESTS.map(_=>0),goals:GOALS.map(_=>0),skills:SKILLS.map(_=>0)});setCourses(c);renderAdminBody();}
+function removeUni(u){if(!confirm('Remove '+u+' and all its programmes?'))return;setCourses(getCourses().filter(c=>c.uni!==u));renderAdminBody();}
+function adminScoring(){const w=getWeights();const keys=[['interest','Interest match'],['goal','Career-goal match'],['skill','Skill fit (×rating)'],['delivery','Study-mode match'],['budget','Budget fit'],['uni','University preference'],['exp','Relevant experience']];
+  let h='<div class="card" style="padding:24px"><h3 style="font-size:18px;margin-bottom:6px">Recommendation weights</h3><p class="note-inline">Higher weight = bigger influence on ranking. Changes apply to the next assessment.</p><div class="wgrid">';
+  keys.forEach(k=>{h+='<div class="wcell"><label>'+k[1]+' · <b id="wv_'+k[0]+'" style="color:var(--gold)">'+w[k[0]]+'</b></label><input type="range" min="0" max="20" value="'+w[k[0]]+'" oninput="document.getElementById(\'wv_'+k[0]+'\').textContent=this.value" data-k="'+k[0]+'"></div>';});
+  h+='</div><div style="display:flex;gap:10px;margin-top:18px"><button class="btn btn-ghost" onclick="resetWeights()">Reset defaults</button><button class="btn btn-primary" onclick="saveWeightsUI()">Save weights</button></div></div>';return h;}
+function saveWeightsUI(){const w={};document.querySelectorAll('#adminBody input[type=range]').forEach(r=>w[r.dataset.k]=+r.value);setWeights(w);flashToast('Weights saved');}
+function resetWeights(){setWeights({...DEFAULT_WEIGHTS});renderAdminBody();}
+function adminAnalytics(){const s=getSubs();const c=getCourses();
+  const byUni={},byTop={};let sum=0;s.forEach(r=>{byUni[r.prefUni||'No Preference']=(byUni[r.prefUni||'No Preference']||0)+1;byTop[r.top]=(byTop[r.top]||0)+1;sum+=r.overall||0;});
+  const avg=s.length?Math.round(sum/s.length):0;
+  let h='<div class="kpis"><div class="card kpi"><div class="k">Submissions</div><div class="v">'+s.length+'</div></div><div class="card kpi"><div class="k">Programmes</div><div class="v">'+c.length+'</div></div><div class="card kpi"><div class="k">Universities</div><div class="v">'+[...new Set(c.map(x=>x.uni))].length+'</div></div><div class="card kpi"><div class="k">Avg. match</div><div class="v">'+avg+'%</div></div></div>';
+  h+='<div class="grid-2"><div class="card" style="padding:22px"><h3 style="font-size:16px;margin-bottom:14px">Preferred university</h3>'+barBlock(byUni,s.length)+'</div><div class="card" style="padding:22px"><h3 style="font-size:16px;margin-bottom:14px">Most recommended</h3>'+barBlock(byTop,s.length)+'</div></div>';
+  if(!s.length)h+='<p class="note-inline">Run a few assessments to populate analytics.</p>';
+  return h;}
+function barBlock(obj,total){const ent=Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,6);if(!ent.length)return '<p class="note-inline">No data yet.</p>';const max=Math.max(...ent.map(e=>e[1]));return ent.map(e=>'<div class="anbar"><span>'+escHtml(shortUni(e[0]))+'</span><div class="t"><i style="width:'+(e[1]/max*100)+'%"></i></div><span>'+e[1]+'</span></div>').join('');}
+
+// ---------- utils ----------
+function val(id){const e=document.getElementById(id);return e?e.value:'';}
+function setVal(id,v){const e=document.getElementById(id);if(e)e.value=v;}
+function escHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escAttr(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');}
+function cssEsc(s){return s.replace(/"/g,'\\"');}
+function exportSubs(fmt){const s=getSubs();let blob,name;if(fmt==='json'){blob=new Blob([JSON.stringify(s,null,2)],{type:'application/json'});name='talore_submissions.json';}else{const head=['Date','Name','Email','Degree','Preferred University','Top match','Overall %'];const rows=s.map(r=>[new Date(r.date).toLocaleString(),r.name,r.email,r.degree,r.prefUni,r.top,r.overall]);const csv=[head].concat(rows).map(r=>r.map(x=>'"'+String(x==null?'':x).replace(/"/g,'""')+'"').join(',')).join('\n');blob=new Blob([csv],{type:'text/csv'});name='talore_submissions.csv';}const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();}
+function flashToast(msg){const t=document.createElement('div');t.textContent=msg;t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#27C2A6;color:#06251f;padding:12px 22px;border-radius:999px;font-weight:600;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.4)';document.body.appendChild(t);setTimeout(()=>t.remove(),1600);}
+
+// hero visual (animated constellation of programmes)
+function heroVisual(){const el=document.getElementById('heroVisual');if(!el)return;const w=420,h=360;let dots='';const N=18;const ps=[];for(let i=0;i<N;i++){ps.push([Math.random()*w,Math.random()*h]);}
+  let lines='';for(let i=0;i<N;i++){for(let j=i+1;j<N;j++){const dx=ps[i][0]-ps[j][0],dy=ps[i][1]-ps[j][1];if(Math.sqrt(dx*dx+dy*dy)<120)lines+='<line x1="'+ps[i][0]+'" y1="'+ps[i][1]+'" x2="'+ps[j][0]+'" y2="'+ps[j][1]+'" stroke="rgba(140,108,255,.18)"/>';}}
+  ps.forEach((p,i)=>{dots+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(2+Math.random()*3)+'" fill="'+(i%3===0?'#F2B450':i%3===1?'#27C2A6':'#8C6CFF')+'"><animate attributeName="opacity" values="0.3;1;0.3" dur="'+(3+Math.random()*3)+'s" repeatCount="indefinite"/></circle>';});
+  el.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:100%">'+lines+dots+'</svg>';}
+
+// ---------- init ----------
+(function init(){
+  try{const saved=JSON.parse(localStorage.getItem(LS.progress));if(saved&&saved.profile){document.getElementById('resumeBtn').style.display='inline-flex';window._saved=saved;}}catch(e){}
+  heroVisual();
+})();
+function resumeAssessment(){if(window._saved){profile=Object.assign(blankProfile(),window._saved.profile);stepIndex=window._saved.stepIndex||0;}renderStep();show('assessment');}
+</script>
+</body>
+</html>
